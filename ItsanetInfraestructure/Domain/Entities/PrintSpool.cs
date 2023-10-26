@@ -74,6 +74,27 @@ namespace ItsanetInfraestructure.Domain.Entities
         public string nota { get; set; }
         public string curva { get; set; }
     }
+    public class PrintLpnVASRequest {
+        public string id_almacen { get; set; }
+        public string codigo_proceso { get; set; }
+    }
+    public class PrintLpnVASResponse
+    {
+        public int id_spool { get; set; }
+        public string id_almacen { get; set; }
+        public string codigo_proceso { get; set; }
+        public string numero_orden_pedido { get; set; }
+        public string numero_lote { get; set; }
+        public float cantidad { get; set; }
+        public string ip_impresora { get; set; }
+        public int puerto_impresora { get; set; }
+        public string estado_impresion { get; set; }
+        public string line { get; set; } //attributte1
+        public string cita { get; set; } //attributte2
+        public string factura { get; set; } //documento
+        public string destino { get; set; }
+    }
+
     public class PrintPatchRequest { 
         public int id_spool { get; set; }
         public string sprint { get; set; }

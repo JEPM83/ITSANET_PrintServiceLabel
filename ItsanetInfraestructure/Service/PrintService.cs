@@ -284,6 +284,94 @@ namespace ItsanetInfraestructure.Service
             strZPL[16] = "^XZ";
             return strZPL;
         }
+        /*Impresion de LPN VAS*/
+        public List<PrintLpnVASResponse> GetPrintDataLpnVAS(PrintLpnVASRequest obj)
+        {
+            DataContextDB printObjects = new DataContextDB();
+            List<PrintLpnVASResponse> resp = new List<PrintLpnVASResponse>();
+            try
+            {
+                resp = printObjects.GetPrintDataLpnVAS(obj);
+                //Console.WriteLine("Starting printer discovery.");
+            }
+            catch (Exception ex)
+            {
+                resp = null;
+                throw new Exception(ex.Message);
+            }
+            return resp;
+        }
+        public void ZebraPrintLpnVASD(List<PrintLpnVASResponse> printList)
+        {
+            try
+            {
+                //int j = 1;
+                float cont = 1;
+                foreach (PrintLpnVASResponse obj in printList)
+                {
+                    try
+                    {
+                        cont = obj.cantidad;
+                        for (int i = 0; i < cont; i++)
+                        {
+                            try
+                            {
+                                //string[] pp = zplFormatBultoxBultoxRFID(obj, i);
+                                Connection connection = new TcpConnection(obj.ip_impresora, obj.puerto_impresora);
+                                connection.Open();
+                                ZebraPrinter printer = ZebraPrinterFactory.GetInstance(PrinterLanguage.LINE_PRINT, connection);
+
+                                string[] strZPL = zplFormatLpnVAS(obj);
+                                //j = j * 10;
+                                printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
+                                Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
+                                Thread.Sleep(500);
+                                PrintPatchRequest objPatch = new PrintPatchRequest();
+                                if (i == 0)
+                                {
+                                    // set print status Yes
+                                    objPatch.id_spool = obj.id_spool;
+                                    objPatch.sprint = "Y";
+                                    SetPrintStatus(objPatch);
+                                }
+                                connection.Close();
+                            }
+                            catch (ConnectionException ex)
+                            {
+                                Console.WriteLine("Error al imprimir 1: " + ex.StackTrace.ToString());
+                            }
+                        }
+                    }
+                    catch (ConnectionException ex)
+                    {
+                        Console.WriteLine("Error al imprimir 2: " + ex.StackTrace.ToString());
+                    }
+                }
+            }
+            catch (ConnectionException ex)
+            {
+                Console.WriteLine("Error al imprimir 3: " + ex.StackTrace.ToString());
+            }
+        }
+        private string[] zplFormatLpnVAS(PrintLpnVASResponse obj)
+        {
+            string[] strZPL = new string[33];
+            strZPL[0] = "^XA";
+            strZPL[1] = "^CFA,30";
+            strZPL[2] = "^FO20,20^FDCODIGO / TALLA " + obj.factura + " " + obj.cantidad + "^FS";
+            strZPL[3] = "^FO20,50^FDEAN^FS";
+            strZPL[4] = "^FO270,50^FD" + obj.cita + "^FS";
+            strZPL[5] = "^^FO20,80^FDIMPORTACION^FS";
+            strZPL[6] = "^BY3,2,40";
+            strZPL[7] = "^FO270,80^BC^FD" + obj.codigo_proceso + "^FS";
+            strZPL[11] = "^FO20,240^FDQTY CAJAS^FS";
+            strZPL[12] = "^FO270,240^FD" + obj.destino + "^FS";
+            strZPL[13] = "^FO600,240^FD" + obj.destino + "^FS";
+            strZPL[14] = "^BY4,2,70";
+            strZPL[15] = "^FO40,280^BC^FD" + obj.line.Trim() + "^FS";
+            strZPL[16] = "^XZ";
+            return strZPL;
+        }
         /*Actualizar Status*/
         public void SetPrintStatus(PrintPatchRequest obj)
         {

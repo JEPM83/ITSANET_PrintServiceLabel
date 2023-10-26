@@ -137,6 +137,48 @@ namespace ItsanetInfraestructure.Domain.DBContext
             }
             return printListDetail;
         }
+        public List<PrintLpnVASResponse> GetPrintDataLpnVAS(PrintLpnVASRequest obj)
+        {
+            var printListDetail = new List<PrintLpnVASResponse>();
+            try
+            {
+
+                using (SqlConnection conn = new SqlConnection(cnxStringCRM))
+                using (SqlCommand cmd = new SqlCommand(ObjectsDA.PrintDataService, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@id_almacen", SqlDbType.NVarChar).Value = obj.id_almacen;
+                    cmd.Parameters.Add("@codigo_proceso", SqlDbType.NVarChar).Value = obj.codigo_proceso;
+                    conn.Open();
+                    SqlDataReader sqlReader = cmd.ExecuteReader();
+                    while (sqlReader.Read())
+                    {
+                        var printDetail = new PrintLpnVASResponse();
+                        printDetail.id_spool = int.Parse(sqlReader["id_spool"].ToString());
+                        printDetail.id_almacen = sqlReader["codigo_proceso"].ToString();
+                        printDetail.codigo_proceso = sqlReader["codigo_proceso"].ToString();
+                        printDetail.numero_orden_pedido = sqlReader["numero_orden_pedido"].ToString();
+                        printDetail.numero_lote = sqlReader["numero_lote"].ToString();
+                        printDetail.cantidad = float.Parse(sqlReader["cantidad"].ToString());
+                        printDetail.ip_impresora =  sqlReader["ip_impresora"].ToString();
+                        printDetail.puerto_impresora = int.Parse(sqlReader["puerto_impresora"].ToString());
+                        printDetail.estado_impresion = sqlReader["estado_impresion"].ToString();
+                        printDetail.line = sqlReader["line"].ToString();
+                        printDetail.cita = sqlReader["cita"].ToString();
+                        printDetail.factura = sqlReader["factura"].ToString();
+                        printDetail.destino = sqlReader["destino"].ToString();
+                        //
+                        printListDetail.Add(printDetail);
+                    }
+                    conn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message.ToString());
+            }
+            return printListDetail;
+        }
         public void SetPrintStatus(PrintPatchRequest obj)
         {
             try

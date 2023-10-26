@@ -14,6 +14,7 @@ namespace ItsanetPrintService
             PrintSpoolRequest model = new PrintSpoolRequest();
             PrintBultoxBultoxEanRequest model_bulto = new PrintBultoxBultoxEanRequest();
             PrintBultoxBultoxRFIDRequest model_bulto_RFID = new PrintBultoxBultoxRFIDRequest();
+            PrintLpnVASRequest model_lpn_VAS = new PrintLpnVASRequest();
             try
             {
                 model.id_almacen = "01";
@@ -27,6 +28,10 @@ namespace ItsanetPrintService
                 model_bulto_RFID.id_almacen = "01";
                 model_bulto_RFID.codigo_proceso = "PRINTER_BULTO_RFID";
                 obj.ZebraPrintBultoxBultoxRFID(obj.GetPrintDataBultoxBultoxRFID(model_bulto_RFID));
+
+                model_lpn_VAS.id_almacen = "01";
+                model_lpn_VAS.codigo_proceso = "PRINTER_LPN_VAS";
+                obj.ZebraPrintLpnVASD(obj.GetPrintDataLpnVAS(model_lpn_VAS));
             }
             catch (Exception ex)
             {
