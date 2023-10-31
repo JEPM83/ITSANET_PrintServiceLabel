@@ -356,20 +356,155 @@ namespace ItsanetInfraestructure.Service
         private string[] zplFormatLpnVAS(PrintLpnVASResponse obj)
         {
             string[] strZPL = new string[33];
-            strZPL[0] = "^XA";
-            strZPL[1] = "^CFA,30";
-            strZPL[2] = "^FO20,20^FDCODIGO / TALLA " + obj.factura + " " + obj.cantidad + "^FS";
-            strZPL[3] = "^FO20,50^FDEAN^FS";
-            strZPL[4] = "^FO270,50^FD" + obj.cita + "^FS";
-            strZPL[5] = "^^FO20,80^FDIMPORTACION^FS";
-            strZPL[6] = "^BY3,2,40";
-            strZPL[7] = "^FO270,80^BC^FD" + obj.codigo_proceso + "^FS";
-            strZPL[11] = "^FO20,240^FDQTY CAJAS^FS";
-            strZPL[12] = "^FO270,240^FD" + obj.destino + "^FS";
-            strZPL[13] = "^FO600,240^FD" + obj.destino + "^FS";
-            strZPL[14] = "^BY4,2,70";
-            strZPL[15] = "^FO40,280^BC^FD" + obj.line.Trim() + "^FS";
-            strZPL[16] = "^XZ";
+            if (obj.destino == "D001")//SAGA TIENDAS
+            {
+                strZPL[0] = "^XA";
+                strZPL[1] = "^CFA,30";
+                strZPL[2] = "^FO30,20^FDO/C " + obj.numero_orden_pedido + "^FS";
+                strZPL[3] = "^FO30,50^FDLOCAL " + obj.destino_cod + "^FS";
+                strZPL[4] = "^FO30,80^FDLINEA " + obj.linea + "^FS";
+                strZPL[5] = "^FO30,110^FDLOTE: " + obj.numero_lote + "^FS";
+                strZPL[6] = "^FO30,140^FDCITA: " + obj.cita + "^FS";
+                strZPL[7] = "^BY3,2,70";
+                strZPL[8] = "^FO40,200^BC^FD" + obj.lpn.Trim() + "^FS";
+                strZPL[9] = "^XZ";
+            }
+            else if (obj.destino == "D002") //SAGA CD
+            {
+                strZPL[0] = "^XA";
+                strZPL[1] = "^CFA,30";
+                strZPL[2] = "^FO30,20^FDO/C " + obj.numero_orden_pedido + "^FS";
+                strZPL[3] = "^FO30,50^FDLOCAL " + obj.destino_cod + "^FS";
+                strZPL[4] = "^FO30,80^FDLINEA " + obj.linea + "^FS";
+                strZPL[5] = "^FO30,110^FDLOTE: " + obj.numero_lote + "^FS";
+                strZPL[6] = "^FO30,140^FDCITA: " + obj.cita + "^FS";
+                strZPL[7] = "^BY3,2,70";
+                strZPL[8] = "^FO40,200^BC^FD" + obj.lpn.Trim() + "^FS";
+                strZPL[9] = "^XZ";
+            }
+            else if (obj.destino == "D005") //TIENDAS PERUANAS y TIENDAS PERUANAS CD
+            {
+                strZPL[0] = "^XA";
+                strZPL[1] = "^CFA,30";
+                strZPL[2] = "^FO30,20^FDDISTRIBUIDORA DEPORTIVA PUMA S.A.C^FS";
+                strZPL[3] = "^FO30,50^FDSUCURSAL: " + obj.destino_cod + " " + obj.destino_des + "^FS";
+                strZPL[4] = "^FO30,80^FDO/C " + obj.numero_orden_pedido + "^FS";
+                strZPL[5] = "^FO30,110^FDDEPARTAMENTO: " + obj.familia + "^FS";
+                strZPL[6] = "^BY3,2,70";
+                strZPL[7] = "^FO40,200^BC^FD" + obj.lpn.Trim() + "^FS";
+                strZPL[8] = "^XZ";
+            }
+            else if (obj.destino == "D006") //TIENDAS PERUANAS VIRTUAL
+            {
+                strZPL[0] = "^XA";
+                strZPL[1] = "^CFA,30";
+                strZPL[2] = "^FO30,20^FDDISTRIBUIDORA DEPORTIVA PUMA S.A.C^FS";
+                strZPL[3] = "^FO30,50^FDSUCURSAL: " + obj.destino_cod + " " + obj.destino_des + "^FS";
+                strZPL[4] = "^FO30,80^FDO/C " + obj.numero_orden_pedido + "^FS";
+                strZPL[5] = "^FO30,110^FDDEPARTAMENTO: " + obj.familia + "^FS";
+                strZPL[6] = "^BY3,2,70";
+                strZPL[7] = "^FO40,200^BC^FD" + obj.lpn.Trim() + "^FS";
+                strZPL[8] = "^XZ";
+            }
+            else if (obj.destino == "D004") //RIPLEY CD
+            {
+                //VALIDAR
+                strZPL[0] = "^XA";
+                strZPL[1] = "^CFA,30";
+                strZPL[2] = "^^FO30,20^FDPROVEEDOR: DISTRIBUIDORA DEPORTIVA PUMA SAC^FS";
+                strZPL[3] = "^BY3,2,70";
+                strZPL[4] = "^FO40,50^BC^FD" + obj.lpn + "^FS";
+                strZPL[5] = "^FO30,180^GB770,170,3^FS";
+                strZPL[6] = "^FO35,190^FDO.COMPRA^FS";
+                strZPL[7] = "^FO250,190^FDUNDS^FS";
+                strZPL[8] = "^FO400,190^FDSUC:" + obj.destino_des + "^FS";
+                strZPL[9] = "^FO30,180^GB210,40,3^FS";
+                strZPL[10] = "^FO30,180^GB350,40,3^FS";
+                strZPL[11] = "^FO30,180^GB770,40,3^FS";
+                strZPL[12] = "^FO30,180^GB210,80,3^FS";
+                strZPL[13] = "^FO30,180^GB210,120,3^FS";
+                strZPL[14] = "^FO30,180^GB210,170,3^FS";
+                strZPL[15] = "^FO30,180^GB350,170,3^FS";
+                strZPL[16] = "^FO35,230^FD" + obj.numero_orden_pedido + "^FS";
+                strZPL[17] = "^FO35,270^FDFACTURA^FS";
+                strZPL[18] = "^FO35,310^FD" + obj.factura + "^FS";
+                strZPL[19] = "^FO270,250^ADN,46,30^FD" + int.Parse(obj.uxc.ToString()).ToString() + "^FS";
+                strZPL[20] = "^FO380,250^ADN,46,30^FD" + obj.destino_cod + "^FS";
+                strZPL[21] = "^XZ";
+            }
+            else if (obj.destino == "D003")//RIPLEY TIENDAS
+            {
+                strZPL[0] = "^XA";
+                strZPL[1] = "^CFA,30";
+                strZPL[2] = "^^FO30,20^FDPROVEEDOR: DISTRIBUIDORA DEPORTIVA PUMA SAC^FS";
+                strZPL[3] = "^BY3,2,70"; 
+                strZPL[4] = "^FO40,50^BC^FD" + obj.lpn + "^FS";
+                strZPL[5] = "^FO30,180^GB770,170,3^FS";
+                strZPL[6] = "^FO35,190^FDO.COMPRA^FS";
+                strZPL[7] = "^FO250,190^FDUNDS^FS";
+                strZPL[8] = "^FO400,190^FDSUC:" + obj.destino_des + "^FS";
+                strZPL[9] = "^FO30,180^GB210,40,3^FS";
+                strZPL[10] = "^FO30,180^GB350,40,3^FS";
+                strZPL[11] = "^FO30,180^GB770,40,3^FS";
+                strZPL[12] = "^FO30,180^GB210,80,3^FS";
+                strZPL[13] = "^FO30,180^GB210,120,3^FS";
+                strZPL[14] = "^FO30,180^GB210,170,3^FS";
+                strZPL[15] = "^FO30,180^GB350,170,3^FS";
+                strZPL[16] = "^FO35,230^FD" + obj.numero_orden_pedido + "^FS";
+                strZPL[17] = "^FO35,270^FDFACTURA^FS";
+                strZPL[18] = "^FO35,310^FD" + obj.factura + "^FS";
+                strZPL[19] = "^FO270,250^ADN,46,30^FD" + int.Parse(obj.uxc.ToString()).ToString() + "^FS";
+                strZPL[20] = "^FO380,250^ADN,46,30^FD" + obj.destino_cod + "^FS";
+                strZPL[21] = "^XZ";
+
+            }
+            else if (obj.destino == "D010") //ESTILOS TIENDAS
+            {
+                strZPL[0] = "^XA";
+                strZPL[1] = "^CFA,30";
+                strZPL[2] = "^^FO30,20^FDPROVEEDOR: DISTRIBUIDORA DEPORTIVA PUMA SAC^FS";
+                strZPL[3] = "^BY3,2,70";
+                strZPL[4] = "^FO40,50^BC^FD" + obj.lpn + "^FS";
+                strZPL[5] = "^FO30,180^GB770,170,3^FS";
+                strZPL[6] = "^FO35,190^FDO.COMPRA^FS";
+                strZPL[7] = "^FO250,190^FDUNDS^FS";
+                strZPL[8] = "^FO400,190^FDSUC:" + obj.destino_des + "^FS";
+                strZPL[9] = "^FO30,180^GB210,40,3^FS";
+                strZPL[10] = "^FO30,180^GB350,40,3^FS";
+                strZPL[11] = "^FO30,180^GB770,40,3^FS";
+                strZPL[12] = "^FO30,180^GB210,80,3^FS";
+                strZPL[13] = "^FO30,180^GB210,120,3^FS";
+                strZPL[14] = "^FO30,180^GB210,170,3^FS";
+                strZPL[15] = "^FO30,180^GB350,170,3^FS";
+                strZPL[16] = "^FO35,230^FD" + obj.numero_orden_pedido + "^FS";
+                strZPL[17] = "^FO35,270^FDFACTURA^FS";
+                strZPL[18] = "^FO35,310^FD" + obj.factura + "^FS";
+                strZPL[19] = "^FO270,250^ADN,46,30^FD" + int.Parse(obj.uxc.ToString()).ToString() + "^FS";
+                strZPL[20] = "^FO380,250^ADN,46,30^FD" + obj.destino_cod + "^FS";
+                strZPL[21] = "^XZ";
+            }
+            else if (obj.destino == "D011") //BATA
+            {
+
+            }
+            else if (obj.destino == "D008" || obj.destino == "D007" || obj.destino == "D009" || obj.destino == "D012" || obj.destino == "D013") //MARATHON y OTROS
+            {
+                
+                strZPL[0] = "^XA";
+                strZPL[1] = "^CFA,30";
+                strZPL[2] = "^FO20,20^FDCODIGO / TALLA " + obj.factura + " " + obj.cantidad + "^FS";
+                strZPL[3] = "^FO20,50^FDEAN^FS";
+                strZPL[4] = "^FO270,50^FD" + obj.cita + "^FS";
+                strZPL[5] = "^^FO20,80^FDIMPORTACION^FS";
+                strZPL[6] = "^BY3,2,40";
+                strZPL[7] = "^FO270,80^BC^FD" + obj.codigo_proceso + "^FS";
+                strZPL[11] = "^FO20,240^FDQTY CAJAS^FS";
+                strZPL[12] = "^FO270,240^FD" + obj.destino + "^FS";
+                strZPL[13] = "^FO600,240^FD" + obj.destino + "^FS";
+                strZPL[14] = "^BY4,2,70";
+                strZPL[15] = "^FO40,280^BC^FD" + obj.linea.Trim() + "^FS";
+                strZPL[16] = "^XZ";
+            }
             return strZPL;
         }
         /*Actualizar Status*/

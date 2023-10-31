@@ -160,13 +160,18 @@ namespace ItsanetInfraestructure.Domain.DBContext
                         printDetail.numero_orden_pedido = sqlReader["numero_orden_pedido"].ToString();
                         printDetail.numero_lote = sqlReader["numero_lote"].ToString();
                         printDetail.cantidad = float.Parse(sqlReader["cantidad"].ToString());
+                        printDetail.uxc = float.Parse(sqlReader["uxc"].ToString());
                         printDetail.ip_impresora =  sqlReader["ip_impresora"].ToString();
                         printDetail.puerto_impresora = int.Parse(sqlReader["puerto_impresora"].ToString());
                         printDetail.estado_impresion = sqlReader["estado_impresion"].ToString();
-                        printDetail.line = sqlReader["line"].ToString();
+                        printDetail.linea = sqlReader["linea"].ToString();
                         printDetail.cita = sqlReader["cita"].ToString();
                         printDetail.factura = sqlReader["factura"].ToString();
                         printDetail.destino = sqlReader["destino"].ToString();
+                        printDetail.lpn = sqlReader["lpn"].ToString();
+                        printDetail.familia = sqlReader["modelo"].ToString();
+                        printDetail.destino_cod = sqlReader["destino_cod"].ToString();
+                        printDetail.destino_des = sqlReader["destino_des"].ToString();
                         //
                         printListDetail.Add(printDetail);
                     }

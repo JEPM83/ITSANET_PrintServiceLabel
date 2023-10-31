@@ -86,13 +86,18 @@ namespace ItsanetInfraestructure.Domain.Entities
         public string numero_orden_pedido { get; set; }
         public string numero_lote { get; set; }
         public float cantidad { get; set; }
+        public float uxc { get; set; }
         public string ip_impresora { get; set; }
         public int puerto_impresora { get; set; }
         public string estado_impresion { get; set; }
-        public string line { get; set; } //attributte1
+        public string linea { get; set; } //attributte1
         public string cita { get; set; } //attributte2
         public string factura { get; set; } //documento
         public string destino { get; set; }
+        public string lpn { get; set; } //BARCODE
+        public string familia { get; set; } //MODELO
+        public string? destino_cod { get; set; } //NOTA
+        public string? destino_des { get; set; } //CURVA
     }
 
     public class PrintPatchRequest { 
