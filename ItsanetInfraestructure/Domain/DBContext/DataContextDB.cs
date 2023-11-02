@@ -184,6 +184,44 @@ namespace ItsanetInfraestructure.Domain.DBContext
             }
             return printListDetail;
         }
+        public List<PrintLpnVasDestinityResponse> GetPrintDataLpnDestinityVAS(PrintLpnVasDestinityRequest obj)
+        {
+            var printListDetail = new List<PrintLpnVasDestinityResponse>();
+            try
+            {
+
+                using (SqlConnection conn = new SqlConnection(cnxStringCRM))
+                using (SqlCommand cmd = new SqlCommand(ObjectsDA.PrintDataService, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@id_almacen", SqlDbType.NVarChar).Value = obj.id_almacen;
+                    cmd.Parameters.Add("@codigo_proceso", SqlDbType.NVarChar).Value = obj.codigo_proceso;
+                    conn.Open();
+                    SqlDataReader sqlReader = cmd.ExecuteReader();
+                    while (sqlReader.Read())
+                    {
+                        var printDetail = new PrintLpnVasDestinityResponse();
+                        printDetail.id_spool = int.Parse(sqlReader["id_spool"].ToString());
+                        printDetail.id_almacen = sqlReader["codigo_proceso"].ToString();
+                        printDetail.codigo_proceso = sqlReader["codigo_proceso"].ToString();
+                        printDetail.cantidad = float.Parse(sqlReader["cantidad"].ToString());
+                        printDetail.uxc = float.Parse(sqlReader["uxc"].ToString());
+                        printDetail.ip_impresora = sqlReader["ip_impresora"].ToString();
+                        printDetail.puerto_impresora = int.Parse(sqlReader["puerto_impresora"].ToString());
+                        printDetail.estado_impresion = sqlReader["estado_impresion"].ToString();
+                        printDetail.destino = sqlReader["destino"].ToString();
+                        printDetail.lpn = sqlReader["lpn"].ToString();
+                        printListDetail.Add(printDetail);
+                    }
+                    conn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message.ToString());
+            }
+            return printListDetail;
+        }
         public void SetPrintStatus(PrintPatchRequest obj)
         {
             try

@@ -301,7 +301,7 @@ namespace ItsanetInfraestructure.Service
             }
             return resp;
         }
-        public void ZebraPrintLpnVASD(List<PrintLpnVASResponse> printList)
+        public void ZebraPrintLpnVAS(List<PrintLpnVASResponse> printList)
         {
             try
             {
@@ -507,6 +507,84 @@ namespace ItsanetInfraestructure.Service
             }
             return strZPL;
         }
+        /*Impresion de LPN VAS Destinity*/
+        public List<PrintLpnVasDestinityResponse> GetPrintDataLpnDestinityVAS(PrintLpnVasDestinityRequest obj)
+        {
+            DataContextDB printObjects = new DataContextDB();
+            List<PrintLpnVasDestinityResponse> resp = new List<PrintLpnVasDestinityResponse>();
+            try
+            {
+                resp = printObjects.GetPrintDataLpnDestinityVAS(obj);
+                //Console.WriteLine("Starting printer discovery.");
+            }
+            catch (Exception ex)
+            {
+                resp = null;
+                throw new Exception(ex.Message);
+            }
+            return resp;
+        }
+        public void ZebraPrintLpnDestinityVAS(List<PrintLpnVasDestinityResponse> printList)
+        {
+            try
+            {
+                //int j = 1;
+                float cont = 1;
+                foreach (PrintLpnVasDestinityResponse obj in printList)
+                {
+                    try
+                    {
+                        cont = obj.cantidad;
+                        for (int i = 0; i < cont; i++)
+                        {
+                            try
+                            {
+                                //string[] pp = zplFormatBultoxBultoxRFID(obj, i);
+                                Connection connection = new TcpConnection(obj.ip_impresora, obj.puerto_impresora);
+                                connection.Open();
+                                ZebraPrinter printer = ZebraPrinterFactory.GetInstance(PrinterLanguage.LINE_PRINT, connection);
+
+                                string[] strZPL = zplFormatLpnDestinityVAS(obj);
+                                //j = j * 10;
+                                printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
+                                Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
+                                Thread.Sleep(500);
+                                PrintPatchRequest objPatch = new PrintPatchRequest();
+                                if (i == 0)
+                                {
+                                    // set print status Yes
+                                    objPatch.id_spool = obj.id_spool;
+                                    objPatch.sprint = "Y";
+                                    SetPrintStatus(objPatch);
+                                }
+                                connection.Close();
+                            }
+                            catch (ConnectionException ex)
+                            {
+                                Console.WriteLine("Error al imprimir 1: " + ex.StackTrace.ToString());
+                            }
+                        }
+                    }
+                    catch (ConnectionException ex)
+                    {
+                        Console.WriteLine("Error al imprimir 2: " + ex.StackTrace.ToString());
+                    }
+                }
+            }
+            catch (ConnectionException ex)
+            {
+                Console.WriteLine("Error al imprimir 3: " + ex.StackTrace.ToString());
+            }
+        }
+        private string[] zplFormatLpnDestinityVAS(PrintLpnVasDestinityResponse obj)
+        {
+            string[] strZPL = new string[33];
+            strZPL[0] = "^XA";
+            strZPL[1] = "^BY1,2,10";
+            strZPL[2] = "^FO20,20^BC^FD" + obj.lpn.Trim() + "^FS";
+            strZPL[3] = "^XZ";
+            return strZPL;
+        }
         /*Actualizar Status*/
         public void SetPrintStatus(PrintPatchRequest obj)
         {
@@ -521,7 +599,6 @@ namespace ItsanetInfraestructure.Service
                 throw new Exception(ex.Message);
             }
         }
-
         private string codificacion(string item) {
             //item = "41261533";
             string[] valor;

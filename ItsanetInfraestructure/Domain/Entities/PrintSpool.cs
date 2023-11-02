@@ -104,4 +104,20 @@ namespace ItsanetInfraestructure.Domain.Entities
         public int id_spool { get; set; }
         public string sprint { get; set; }
     }
+    public class PrintLpnVasDestinityRequest {
+        public string id_almacen { get; set; }
+        public string codigo_proceso { get; set; }
+    }
+    public class PrintLpnVasDestinityResponse {
+        public int id_spool { get; set; }
+        public string id_almacen { get; set; }
+        public string codigo_proceso { get; set; }
+        public float cantidad { get; set; }
+        public float uxc { get; set; }
+        public string ip_impresora { get; set; }
+        public int puerto_impresora { get; set; }
+        public string estado_impresion { get; set; }
+        public string destino { get; set; }
+        public string lpn { get; set; } //BARCODE        
+    }
 }
