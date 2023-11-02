@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading;
@@ -528,7 +529,9 @@ namespace ItsanetInfraestructure.Service
         {
             try
             {
-                //int j = 1;
+                int j = 1;
+                string[] strZPLTmp = null;
+                string[] strZPL;
                 float cont = 1;
                 foreach (PrintLpnVasDestinityResponse obj in printList)
                 {
@@ -539,16 +542,52 @@ namespace ItsanetInfraestructure.Service
                         {
                             try
                             {
-                                //string[] pp = zplFormatBultoxBultoxRFID(obj, i);
                                 Connection connection = new TcpConnection(obj.ip_impresora, obj.puerto_impresora);
                                 connection.Open();
                                 ZebraPrinter printer = ZebraPrinterFactory.GetInstance(PrinterLanguage.LINE_PRINT, connection);
-
-                                string[] strZPL = zplFormatLpnDestinityVAS(obj);
+                                int f1 = 0,f5= 0,f6=0;
+                                bool flagC = false;
+                                bool flagP = false;
+                                if (j == 1)
+                                {
+                                    f1 = 20;
+                                    f5 = 180;
+                                    f6 = 9876;
+                                    flagC = false;
+                                    flagP = (cont == 1 && printList.Count() == 1) ? true : false;
+                                    strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f6, flagC,flagP);
+                                    strZPLTmp = strZPL;
+                                    j = j + 1;
+                                    if ((cont == 1 && printList.Count() == 1)) {
+                                        printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
+                                        Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
+                                        
+                                        foreach (string elemento in strZPL)
+                                        {
+                                            Console.WriteLine(elemento);
+                                        }
+                                        Thread.Sleep(500);
+                                    }
+                                }
+                                else {
+                                    f1 = 450;
+                                    f5 = 610;
+                                    f6 = 9922;
+                                    flagC = true;
+                                    flagP = true;
+                                    strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f6, flagC,flagP);
+                                    List<string> strZPLCombined = new List<string>(strZPLTmp);
+                                    strZPLCombined.AddRange(strZPL);
+                                    j = 1;
+                                    printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
+                                    Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
+                                    foreach (string elemento in strZPLCombined)
+                                    {
+                                        Console.WriteLine(elemento);
+                                    }
+                                    Thread.Sleep(500);
+                                }
                                 //j = j * 10;
-                                printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
-                                Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
-                                Thread.Sleep(500);
                                 PrintPatchRequest objPatch = new PrintPatchRequest();
                                 if (i == 0)
                                 {
@@ -557,7 +596,7 @@ namespace ItsanetInfraestructure.Service
                                     objPatch.sprint = "Y";
                                     SetPrintStatus(objPatch);
                                 }
-                                connection.Close();
+                                //connection.Close();
                             }
                             catch (ConnectionException ex)
                             {
@@ -576,13 +615,17 @@ namespace ItsanetInfraestructure.Service
                 Console.WriteLine("Error al imprimir 3: " + ex.StackTrace.ToString());
             }
         }
-        private string[] zplFormatLpnDestinityVAS(PrintLpnVasDestinityResponse obj)
+        private string[] zplFormatLpnDestinityVAS(PrintLpnVasDestinityResponse obj,int f2,int f5,int f6,bool flagC,bool flagP)
         {
-            string[] strZPL = new string[33];
-            strZPL[0] = "^XA";
-            strZPL[1] = "^BY1,2,10";
-            strZPL[2] = "^FO20,20^BC^FD" + obj.lpn.Trim() + "^FS";
-            strZPL[3] = "^XZ";
+            string[] strZPL = new string[8];
+            strZPL[0] = flagC == false ? "^XA" : null;
+            strZPL[1] = "^FO" + f2.ToString() + ",20^BY2";
+            strZPL[2] = "^BQN,2,7";
+            strZPL[3] = "^FD" + obj.lpn + "^FS";
+            strZPL[4] = "^FO" + f5.ToString() + ",90^A0N,50,50";
+            strZPL[5] = "^FB200,1,0,L,0";
+            strZPL[6] = "^FD" + f6.ToString() + "^FS";
+            strZPL[7] = flagP == true ? "^XZ" : null ;
             return strZPL;
         }
         /*Actualizar Status*/
