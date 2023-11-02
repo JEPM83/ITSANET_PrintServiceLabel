@@ -530,6 +530,7 @@ namespace ItsanetInfraestructure.Service
             try
             {
                 int j = 1;
+                int z = 1;
                 string[] strZPLTmp = null;
                 string[] strZPL;
                 float cont = 1;
@@ -548,17 +549,17 @@ namespace ItsanetInfraestructure.Service
                                 int f1 = 0,f5= 0,f6=0;
                                 bool flagC = false;
                                 bool flagP = false;
-                                if (j == 1)
+                                if (j == 1 || z == printList.Count())
                                 {
                                     f1 = 20;
                                     f5 = 180;
                                     f6 = 9876;
                                     flagC = false;
-                                    flagP = (cont == 1 && printList.Count() == 1) ? true : false;
+                                    flagP = ((cont == 1 && printList.Count() == 1) || z == printList.Count()) ? true : false;
                                     strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f6, flagC,flagP);
                                     strZPLTmp = strZPL;
                                     j = j + 1;
-                                    if ((cont == 1 && printList.Count() == 1)) {
+                                    if ((cont == 1 && printList.Count() == 1) || z == printList.Count()) {
                                         printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
                                         Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
                                         
@@ -576,10 +577,11 @@ namespace ItsanetInfraestructure.Service
                                     flagC = true;
                                     flagP = true;
                                     strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f6, flagC,flagP);
-                                    List<string> strZPLCombined = new List<string>(strZPLTmp);
-                                    strZPLCombined.AddRange(strZPL);
+                                    //List<string> strZPLCombined = new List<string>(strZPLTmp);
+                                    //strZPLCombined.AddRange(strZPL);
+                                    string[] strZPLCombined = strZPLTmp.Concat(strZPL).ToArray();
                                     j = 1;
-                                    printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
+                                    printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPLCombined);
                                     Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
                                     foreach (string elemento in strZPLCombined)
                                     {
@@ -608,6 +610,7 @@ namespace ItsanetInfraestructure.Service
                     {
                         Console.WriteLine("Error al imprimir 2: " + ex.StackTrace.ToString());
                     }
+                    z++;
                 }
             }
             catch (ConnectionException ex)
