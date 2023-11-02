@@ -34,8 +34,8 @@ namespace ItsanetPrintService
                 model_lpn_VAS.codigo_proceso = "PRINTER_LPN_VAS";
                 obj.ZebraPrintLpnVAS(obj.GetPrintDataLpnVAS(model_lpn_VAS));
 
-                model_lpn_VAS.id_almacen = "01";
-                model_lpn_VAS.codigo_proceso = "PRINTER_LPN_VAS_DESTINITY";
+                model_lpn_destinity_VAS.id_almacen = "01";
+                model_lpn_destinity_VAS.codigo_proceso = "PRINTER_LPN_VAS_DESTINITY";
                 obj.ZebraPrintLpnDestinityVAS(obj.GetPrintDataLpnDestinityVAS(model_lpn_destinity_VAS));
             }
             catch (Exception ex)
