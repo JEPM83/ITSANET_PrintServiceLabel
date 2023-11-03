@@ -530,7 +530,7 @@ namespace ItsanetInfraestructure.Service
             try
             {
                 int j = 1;
-                int z = 1;
+                int z = 0;
                 string[] strZPLTmp = null;
                 string[] strZPL;
                 float cont = 1;
@@ -623,11 +623,11 @@ namespace ItsanetInfraestructure.Service
             string[] strZPL = new string[11];
             strZPL[0] = flagC == false ? "^XA" : null;
             strZPL[1] = "^FO" + f2.ToString() + ",10^BY2";
-            strZPL[2] = "^BQN,2,6";
+            strZPL[2] = "^BQN,2,5";
             strZPL[3] = "^FD" + obj.lpn + "^FS";
             strZPL[4] = "^FO" + f5.ToString() + ",80^A0N,50,50";
             strZPL[5] = "^FB150,1,0,L,0";
-            strZPL[6] = "^FD" + obj.nombre_destino + "^FS";
+            strZPL[6] = "^FD" + obj.nombre_destino.Substring(0,4) + "^FS";
             strZPL[7] = "^FO" + f8.ToString() + ",140^A0N,50,50";
             strZPL[8] = "^FB150,1,0,L,0";
             strZPL[9] = "^FD" + obj.lpn.Substring(obj.lpn.Length - 4) + "^FS";
