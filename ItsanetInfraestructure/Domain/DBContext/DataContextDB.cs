@@ -210,6 +210,7 @@ namespace ItsanetInfraestructure.Domain.DBContext
                         printDetail.puerto_impresora = int.Parse(sqlReader["puerto_impresora"].ToString());
                         printDetail.estado_impresion = sqlReader["estado_impresion"].ToString();
                         printDetail.destino = sqlReader["destino"].ToString();
+                        printDetail.nombre_destino = sqlReader["nombre_destino"].ToString();
                         printDetail.lpn = sqlReader["lpn"].ToString();
                         printListDetail.Add(printDetail);
                     }

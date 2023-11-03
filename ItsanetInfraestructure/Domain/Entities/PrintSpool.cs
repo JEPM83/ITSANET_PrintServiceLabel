@@ -118,6 +118,7 @@ namespace ItsanetInfraestructure.Domain.Entities
         public int puerto_impresora { get; set; }
         public string estado_impresion { get; set; }
         public string destino { get; set; }
+        public string nombre_destino { get; set; } //NOTA
         public string lpn { get; set; } //BARCODE        
     }
 }

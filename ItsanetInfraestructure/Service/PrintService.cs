@@ -546,17 +546,17 @@ namespace ItsanetInfraestructure.Service
                                 Connection connection = new TcpConnection(obj.ip_impresora, obj.puerto_impresora);
                                 connection.Open();
                                 ZebraPrinter printer = ZebraPrinterFactory.GetInstance(PrinterLanguage.LINE_PRINT, connection);
-                                int f1 = 0,f5= 0,f6=0;
+                                int f1 = 0,f5= 0,f8=0;
                                 bool flagC = false;
                                 bool flagP = false;
                                 if (j == 1 || z == printList.Count())
                                 {
-                                    f1 = 20;
+                                    f1 = 40;
                                     f5 = 180;
-                                    f6 = 9876;
+                                    f8 = 180;
                                     flagC = false;
                                     flagP = ((cont == 1 && printList.Count() == 1) || z == printList.Count()) ? true : false;
-                                    strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f6, flagC,flagP);
+                                    strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f8, flagC,flagP);
                                     strZPLTmp = strZPL;
                                     j = j + 1;
                                     if ((cont == 1 && printList.Count() == 1) || z == printList.Count()) {
@@ -571,12 +571,12 @@ namespace ItsanetInfraestructure.Service
                                     }
                                 }
                                 else {
-                                    f1 = 450;
+                                    f1 = 470;
                                     f5 = 610;
-                                    f6 = 9922;
+                                    f8 = 610;
                                     flagC = true;
                                     flagP = true;
-                                    strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f6, flagC,flagP);
+                                    strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f8, flagC,flagP);
                                     //List<string> strZPLCombined = new List<string>(strZPLTmp);
                                     //strZPLCombined.AddRange(strZPL);
                                     string[] strZPLCombined = strZPLTmp.Concat(strZPL).ToArray();
@@ -618,17 +618,20 @@ namespace ItsanetInfraestructure.Service
                 Console.WriteLine("Error al imprimir 3: " + ex.StackTrace.ToString());
             }
         }
-        private string[] zplFormatLpnDestinityVAS(PrintLpnVasDestinityResponse obj,int f2,int f5,int f6,bool flagC,bool flagP)
+        private string[] zplFormatLpnDestinityVAS(PrintLpnVasDestinityResponse obj,int f2,int f5,int f8,bool flagC,bool flagP)
         {
-            string[] strZPL = new string[8];
+            string[] strZPL = new string[11];
             strZPL[0] = flagC == false ? "^XA" : null;
-            strZPL[1] = "^FO" + f2.ToString() + ",20^BY2";
-            strZPL[2] = "^BQN,2,7";
+            strZPL[1] = "^FO" + f2.ToString() + ",10^BY2";
+            strZPL[2] = "^BQN,2,6";
             strZPL[3] = "^FD" + obj.lpn + "^FS";
-            strZPL[4] = "^FO" + f5.ToString() + ",90^A0N,50,50";
-            strZPL[5] = "^FB200,1,0,L,0";
-            strZPL[6] = "^FD" + f6.ToString() + "^FS";
-            strZPL[7] = flagP == true ? "^XZ" : null ;
+            strZPL[4] = "^FO" + f5.ToString() + ",80^A0N,50,50";
+            strZPL[5] = "^FB150,1,0,L,0";
+            strZPL[6] = "^FD" + obj.nombre_destino + "^FS";
+            strZPL[7] = "^FO" + f8.ToString() + ",140^A0N,50,50";
+            strZPL[8] = "^FB150,1,0,L,0";
+            strZPL[9] = "^FD" + obj.lpn.Substring(obj.lpn.Length - 4) + "^FS";
+            strZPL[10] = flagP == true ? "^XZ" : null ;
             return strZPL;
         }
         /*Actualizar Status*/
