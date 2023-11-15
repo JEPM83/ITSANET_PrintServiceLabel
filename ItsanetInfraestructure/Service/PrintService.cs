@@ -555,11 +555,11 @@ namespace ItsanetInfraestructure.Service
                                     f5 = 180;
                                     f8 = 180;
                                     flagC = false;
-                                    flagP = ((cont == 1 && printList.Count() == 1) || z == printList.Count()) ? true : false;
+                                    flagP = ((cont == 1 && printList.Count() == 1) || (z == printList.Count() - 1)) ? true : false;
                                     strZPL = zplFormatLpnDestinityVAS(obj, f1, f5, f8, flagC,flagP);
                                     strZPLTmp = strZPL;
                                     j = j + 1;
-                                    if ((cont == 1 && printList.Count() == 1) || z == printList.Count()) {
+                                    if ((cont == 1 && printList.Count() == 1) || (z == printList.Count() -1)) {
                                         printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
                                         Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
                                         
