@@ -251,9 +251,7 @@ namespace ItsanetInfraestructure.Service
         }
         private string[] zplFormatBultoxBultoxRFID(PrintBultoxBultoxRFIDResponse obj,int i)
         {
-            //string hostgroupid = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-            string hostgroupid = DateTime.Now.ToString("fffssmmHHdd");
-            //string hostgroupid = DateTime.Now.ToString("ddHHmmssfff");
+            string hostgroupid = DateTime.Now.ToString("fffssmmHHdd");            
             string valorHex;
             string cia = "9999";
             string item = obj.numero_item;
@@ -261,28 +259,26 @@ namespace ItsanetInfraestructure.Service
             string contador = (i + 1).ToString();
             valorHex = String.Format("{0:X}",BigInteger.Parse(String.Concat(cia,item,validador,obj.curva.Trim(),hostgroupid)));
             valorHex = valorHex.PadLeft(24,'0');
-            //valorHex = String.Format("{0:X}", long.Parse(String.Concat(cia, item, validador, contador)));
-            string[] strZPL = new string[17];
+            string[] strZPL = new string[19];
             strZPL[0] = "^XA";
-            strZPL[1] = "^RS8";
-            strZPL[2] = "^RFW,H^FD" + valorHex + "^FS";
-            strZPL[3] = "^BY1,2,20";
-            strZPL[4] = "^FO60,20^A0N,20,20^FDCODIGO INV^FS";
-            strZPL[5] = "^FO180,20^A0N,20,20^BC^FD" + obj.numero_item.Trim() + "CB" +  obj.curva.Trim() + "^FS";
-            strZPL[6] = "^FO60,80^A0N,20,20^FDIMPORTACION^FS";
-            strZPL[7] = "^BY1,2,20";
-            strZPL[8] = "^FO180,80^A0N,20,20^BC^FD" + obj.importacion + "^FS";
-            //strZPL[9] = "^FO60,130^A0N,20,20^FDNUM O/C^FS";
-            //strZPL[10] = "^BY1,2,20";
-            //strZPL[11] = "^FO180,130^A0N,20,20^BC^FD" + obj.numero_orden_compra + "^FS";
-            strZPL[9] = "^FO60,190^A0N,20,20^FDQTY CAJAS^FS";
-            strZPL[10] = "^FO220,190^A0N,20,20^FD" + obj.cantidad_bulto + "^FS";
-            strZPL[11] = "^FO370,150^A0N,20,20^FD" + obj.destino + "^FS";
-            strZPL[12] = "^FO370,170^A0N,20,20^FD" + String.Concat("CB",obj.curva.Trim()) + "^FS";
-            strZPL[13] = "^FO350,190^A0N,20,20^FD" + obj.nota + "^FS";
-            strZPL[14] = "^BY3,2,40";
-            strZPL[15] = "^FO60,210^A0N,20,20^BC^FD" + obj.codigo_barra.Trim() + "^FS";
-            strZPL[16] = "^XZ";
+            strZPL[3] = "^RS8";
+            strZPL[4] = "^RFW,H,0,24^FD" + valorHex + "^FS";
+            //strZPL[3] = "^XA";
+            //strZPL[4] = "^XF:^FD>:" + valorHex + "^FS^XZ";
+            strZPL[5] = "^BY1,2,20";
+            strZPL[6] = "^FO60,130^A0N,20,20^FDCODIGO INV^FS";
+            strZPL[7] = "^FO180,130^A0N,20,20^BC^FD" + obj.numero_item.Trim() + "CB" +  obj.curva.Trim() + "^FS";
+            strZPL[8] = "^FO60,210^A0N,20,20^FDIMPORTACION^FS";
+            strZPL[9] = "^BY1,2,20";
+            strZPL[10] = "^FO180,190^A0N,20,20^BC^FD" + obj.importacion + "^FS";            
+            strZPL[11] = "^FO60,300^A0N,20,20^FDQTY CAJAS^FS";
+            strZPL[12] = "^FO220,300^A0N,20,20^FD" + obj.cantidad_bulto + "^FS";
+            strZPL[13] = "^FO370,260^A0N,20,20^FD" + obj.destino + "^FS";
+            strZPL[14] = "^FO370,280^A0N,20,20^FD" + String.Concat("CB",obj.curva.Trim()) + "^FS";
+            strZPL[15] = "^FO350,300^A0N,20,20^FD" + obj.nota + "^FS";
+            strZPL[16] = "^BY3,2,40";
+            strZPL[17] = "^FO60,320^A0N,20,20^BC^FD" + obj.codigo_barra.Trim() + "^FS";
+            strZPL[18] = "^XZ";
             return strZPL;
         }
         /*Impresion de LPN VAS*/
