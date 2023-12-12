@@ -15,7 +15,7 @@ namespace ItsanetPrintService
             PrintBultoxBultoxEanRequest model_bulto = new PrintBultoxBultoxEanRequest();
             PrintBultoxBultoxRFIDRequest model_bulto_RFID = new PrintBultoxBultoxRFIDRequest();
             PrintLpnVASRequest model_lpn_VAS = new PrintLpnVASRequest();
-            PrintLpnVasDestinityRequest model_lpn_destinity_VAS = new PrintLpnVasDestinityRequest();
+            PrintLpnVasDestinityRequest model_lpn_destinity_VAS = new PrintLpnVasDestinityRequest(); 
             try
             {
                 model.id_almacen = "01";
