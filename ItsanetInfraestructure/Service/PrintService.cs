@@ -223,12 +223,12 @@ namespace ItsanetInfraestructure.Service
                         {
                             try
                             {
-                                //Connection connection = new TcpConnection(obj.ip_impresora, obj.puerto_impresora);
-                                //connection.Open();
-                                //ZebraPrinter printer = ZebraPrinterFactory.GetInstance(PrinterLanguage.LINE_PRINT, connection);
+                                Connection connection = new TcpConnection(obj.ip_impresora, obj.puerto_impresora);
+                                connection.Open();
+                                ZebraPrinter printer = ZebraPrinterFactory.GetInstance(PrinterLanguage.LINE_PRINT, connection);
                                 
                                 string[] strZPL = zplFormatBultoxBultoxRFID(obj,i);
-                                //printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
+                                printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
                                 Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
                                 Thread.Sleep(500);
                                 PrintPatchRequest objPatch = new PrintPatchRequest();
@@ -239,7 +239,7 @@ namespace ItsanetInfraestructure.Service
                                     objPatch.sprint = "Y";
                                     SetPrintStatus(objPatch);
                                 }
-                                //connection.Close();
+                                connection.Close();
                             }
                             catch (ConnectionException ex)
                             {
