@@ -103,6 +103,7 @@ namespace ItsanetInfraestructure.Domain.Entities
     public class PrintPatchRequest { 
         public int id_spool { get; set; }
         public string sprint { get; set; }
+        public string rfid { get; set; }
     }
     public class PrintLpnVasDestinityRequest {
         public string id_almacen { get; set; }

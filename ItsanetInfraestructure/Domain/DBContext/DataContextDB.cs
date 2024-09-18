@@ -233,6 +233,7 @@ namespace ItsanetInfraestructure.Domain.DBContext
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@id_spool", SqlDbType.Int).Value = obj.id_spool;
                     cmd.Parameters.Add("@sprint", SqlDbType.Char).Value = obj.sprint;
+                    cmd.Parameters.Add("@auxiliar_1", SqlDbType.VarChar).Value = obj.rfid;
                     conn.Open();
                     int srow = cmd.ExecuteNonQuery();
                     conn.Close();

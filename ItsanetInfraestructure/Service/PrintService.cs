@@ -226,8 +226,12 @@ namespace ItsanetInfraestructure.Service
                                 Connection connection = new TcpConnection(obj.ip_impresora, obj.puerto_impresora);
                                 connection.Open();
                                 ZebraPrinter printer = ZebraPrinterFactory.GetInstance(PrinterLanguage.LINE_PRINT, connection);
-                                
-                                string[] strZPL = zplFormatBultoxBultoxRFID(obj,i);
+                                string[] strZPLprev = zplFormatBultoxBultoxRFID(obj, i);
+                                string rfid_hex = strZPLprev[17];
+                                //string[] strZPL = zplFormatBultoxBultoxRFID(obj,i);
+                                strZPLprev[17] = String.Empty;
+                                string[] strZPL = strZPLprev;
+                                //printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
                                 printer.PrintStoredFormat("E:FORMAT3.ZPL", strZPL);
                                 Console.WriteLine("Imprimiendo etiqueta en impresora: " + obj.ip_impresora.ToString());
                                 Thread.Sleep(500);
@@ -237,6 +241,7 @@ namespace ItsanetInfraestructure.Service
                                     // set print status Yes
                                     objPatch.id_spool = obj.id_spool;
                                     objPatch.sprint = "Y";
+                                    objPatch.rfid = rfid_hex;
                                     SetPrintStatus(objPatch);
                                 }
                                 connection.Close();
@@ -292,7 +297,7 @@ namespace ItsanetInfraestructure.Service
             ////strZPL[14] = "^BY3,2,40";
             ////strZPL[15] = "^FO60,320^A0N,20,20^BC^FD" + obj.codigo_barra.Trim() + "^FS";
             ////strZPL[16] = "^XZ";
-            string[] strZPL = new string[17];
+            string[] strZPL = new string[18];
             strZPL[0] = "^XA";
             strZPL[1] = "^RS8";
             strZPL[2] = "^RFW,H,0,24^FD" + valorHex + "^FS";
@@ -310,6 +315,7 @@ namespace ItsanetInfraestructure.Service
             strZPL[14] = "^BY3,2,40";
             strZPL[15] = "^FO60,210^A0N,20,20^BC^FD" + obj.codigo_barra.Trim() + "^FS";
             strZPL[16] = "^XZ";
+            strZPL[17] = valorHex;
             //Ver cadena de impresion
             string resultado = String.Empty;
             for (int j = 0; j < strZPL.Count(); j++)
